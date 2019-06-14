@@ -1,18 +1,31 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div>
+    <div>
+      <Multiselect :options="allData"></Multiselect>
+    </div>
+    <div>
+
+    </div>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
 
+import dataArray from '@/data'
+import Multiselect from 'vue-multiselect'
 export default {
   name: 'home',
-  components: {
-    HelloWorld
+  components: { Multiselect },
+  data () {
+    return {
+
+    }
+  },
+  computed: {
+    allData () {
+      return dataArray
+    }
   }
+
 }
 </script>
