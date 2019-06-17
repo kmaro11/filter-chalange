@@ -1,18 +1,10 @@
 <template>
     <div>
-        <div>
-<!--            <Multiselect :options="filterData">-->
-<!--              <template slot="option" slot-scope="item">-->
-<!--                <p>{{item.group}}</p>-->
-<!--                <p></p>-->
-<!--              </template>-->
-<!--            </Multiselect>-->
-        </div>
-      <input type="text" v-model="filter">
-        <div v-for="item in justCheck" :key="item.group">
+        <input type="text" v-model="inputFilter">
+        <div v-for="item in justCheck">
             <div>
-                <div>
-                  {{item.group}}
+                <div style="background: wheat">
+                    {{item.group}}
                 </div>
                 <div v-for="val in item.values" :key="val.name">
                     {{val.name}}
@@ -26,53 +18,38 @@
 
   import dataArray from '@/data'
 
-  // import Multiselect from 'vue-multiselect'
-
   export default {
     name: 'home',
-    // components: {Multiselect},
     data () {
       return {
-        filter: ''
+        inputFilter: '',
+        newFilter: []
       }
     },
     methods: {
-      filerItem (items, term, fields) {
+      filerItem (items, term) {
         if (!term) {
           return items
         }
         term = term.toUpperCase()
         let filtered = []
-
-        for (let index in items) {
-          if (!items.hasOwnProperty(index)) {
-            continue
-          }
-
-          let item = JSON.parse(JSON.stringify(items[index])) // cloning object Justin Case
-
-          let included = false
-
-          for (let prop in item) {
-            if (!item.hasOwnProperty(prop) || fields.indexOf(prop) === -1 || included) {
-              continue
+        let savedItems = JSON.parse(JSON.stringify(items))
+        savedItems.forEach(data => {
+          let dataValues = data.values
+          let filterdObjects = []
+          dataValues.forEach(items => {
+            if (typeof items.name === 'string' && items.name.toUpperCase().indexOf(term) !== -1) {
+              filterdObjects.push(items)
             }
-
-            let property = item[prop]
-            if (typeof property === 'string' && property.toUpperCase().indexOf(term) !== -1) {
-              filtered.push(item)
-              included = true
-            } else if (typeof property === 'object') {
-              // If given field is array of strings
-              if (property !== null && property.find(item => item.toUpperCase().indexOf(term) !== -1)) {
-                filtered.push(item)
-                included = true
-              }
-            }
+          })
+          data.values = [...filterdObjects]
+          if (data.values.length) {
+            filtered.push(data)
           }
-        }
+        })
         return filtered
-      }
+      },
+
     },
     computed: {
       allData () {
@@ -86,8 +63,9 @@
         })
         return newArray
       },
+
       justCheck () {
-        return this.filerItem(this.allData, this.filter, ['group'])
+        return this.filerItem(this.allData, this.inputFilter)
       },
 
     },
