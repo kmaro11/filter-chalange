@@ -1,7 +1,7 @@
 <template>
     <div>
         <input type="text" v-model="inputFilter">
-        <div v-for="item in justCheck">
+        <div v-for="item in filteredData">
             <div>
                 <div style="background: wheat">
                     {{item.group}}
@@ -52,7 +52,7 @@
 
     },
     computed: {
-      allData () {
+      changeData () {
         let newArray = []
         dataArray.forEach((item, i) => {
           if (item.group === 'Custom metrics') {
@@ -64,8 +64,8 @@
         return newArray
       },
 
-      justCheck () {
-        return this.filerItem(this.allData, this.inputFilter)
+      filteredData () {
+        return this.filerItem(this.changeData, this.inputFilter)
       },
 
     },
